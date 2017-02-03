@@ -1,2 +1,3 @@
 # Ionic2-snippets
-self working component
+
+You will find here some Ionic 2 self working components
