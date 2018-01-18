@@ -35,5 +35,18 @@ export class ToolProvider {
       return 0;
     }
   }
+  
+  /**
+   * JSON format validator
+   * @param str : string to check
+   */
+  IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+  }
 
 }
