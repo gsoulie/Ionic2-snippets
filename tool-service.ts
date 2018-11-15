@@ -41,7 +41,7 @@ export class ToolProvider {
   }
   
   /**
-   * Using array filtering
+   * Array filtering with filter() above function
    **/
   getItemByMultiCriteria(name?: string,surname?: string,job?: string,anything?: string){
     
