@@ -25,6 +25,41 @@ export class ToolProvider {
     };
     return -1;
   }
+  
+  /**
+   * Array filtering with multiple criteria
+   * @param arr : JSON object array like [{name:"aaa",surname:"bbb",job:"ccc"}]
+   * @param criteria : JSON criteria object like {"lastName":"AAA","firstName":"BBB"}
+   */
+  filter(arr, criteria) {
+    return arr.filter(function(obj) {
+      return Object.keys(criteria).every(function(c) {
+        return obj[c].includes(criteria[c].toUpperCase());  // get element if contains searched value
+        //return obj[c] == criteria[c].toUpperCase();
+      });
+    });
+  }
+  
+  /**
+   * Using array filtering
+   **/
+  getItemByMultiCriteria(name?: string,surname?: string,job?: string,anything?: string){
+    
+    let filters = {};
+    if(name !== "" && name !== undefined){
+      filters['name'] = name.toUpperCase()
+    }
+    if(surname !== "" && surname !== undefined){
+      filters['surname'] = surname.toUpperCase();
+    }
+    if(job !== "" && job !== undefined){
+      filters['job'] = job.toUpperCase();
+    }
+    if(anything !== "" && anything !== undefined){
+      filters['anything'] = anything.toUpperCase();
+    }
+    return this.filter(this.myArray, filters);
+  }
 
   /**
    * Sort function
