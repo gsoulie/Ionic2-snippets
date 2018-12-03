@@ -199,5 +199,28 @@ export class ToolProvider {
 
     return ("0" + RTC.toString(16)).slice(-8);   // Add "0" before result and keep the last 4 bytes
   }
+  
+  /**
+   * PWA : Write data in file and download it
+   **/
+  onWriteToFile(filename: string, data: string){
+    if(filename === ""){
+      return; 
+    } else {
+      var blob = new Blob([data],{type:'text/plain'}),
+      e = document.createEvent('MouseEvents'),
+      a = document.createElement('a');
+
+      if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+       window.navigator.msSaveOrOpenBlob(blob, filename);
+      } else {
+        a.download = filename;
+        a.href = window.URL.createObjectURL(blob);
+        a.dataset.downloadurl = ['text/plain', a.download, a.href].join(':');
+        e.initEvent('click', true, false);
+        a.dispatchEvent(e);
+      }
+    }
+  }
 
 }
