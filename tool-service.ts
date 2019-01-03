@@ -222,5 +222,33 @@ export class ToolProvider {
       }
     }
   }
+  
+  /**
+   * Return an object containing the difference between 2 dates in day, hour, minute, second
+   * @param date1 
+   * @param date2 
+   */
+  getDateDiff(date1, date2){
+    var diff: any = {}; // difference in day, hour, minute, second
+
+    if(date1 !== null && date1 !== undefined && date2 !== null && date2 !== undefined){
+
+      var tmp = +date1 - date2;               // get the difference between the 2 dates
+    
+      tmp = Math.floor(tmp/1000);             // number of seconds between the 2 dates
+      diff.sec = tmp % 60;                    // extract the number of seconds
+    
+      tmp = Math.floor((tmp-diff.sec)/60);    // number of minutes between the 2 dates
+      diff.min = tmp % 60;                    // extract the number of minutes
+    
+      tmp = Math.floor((tmp-diff.min)/60);    // number of entire hours between the 2 dates
+      diff.hour = tmp % 24;                   // extract the number of hours
+        
+      tmp = Math.floor((tmp-diff.hour)/24);   // number of remaining days
+      diff.day = tmp;
+    }
+
+    return diff;
+  }
 
 }
