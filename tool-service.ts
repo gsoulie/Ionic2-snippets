@@ -12,17 +12,17 @@ export class ToolProvider {
 
   /**
    * Searching specific member in array
-   * @param _searchID 
-   * @param _myArray 
-   * @param _rubID 
+   * @param searchedId 
+   * @param jsonArray 
+   * @param attributeName 
    */
-  arraySearch(_searchID, _myArray, _rubID){
-    if(!_rubID) {_rubID = "id"; } //default search on "id" member
-    for (var i=0; i < _myArray.length; i++) {
-        if (eval("_myArray[i]." + _rubID) === _searchID) {
+  arraySearch(searchedId, jsonArray, attributeName) {
+    if (!attributeName) {attributeName = 'id'; } //default search on "id" member
+    for (let i = 0; i < jsonArray.length; i++) {
+        if (eval("jsonArray[i]." + attributeName) === searchedId) {
             return i;
         }
-    };
+    }
     return -1;
   }
   
