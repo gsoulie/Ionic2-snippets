@@ -25,6 +25,11 @@ export class ToolProvider {
     }
     return -1;
   }
+  arraySearch2() {
+    return this.myArray.find(item => {
+      return item.id === this.selectedId;
+   });
+  }
   
   /**
    * Array filtering with multiple criteria
