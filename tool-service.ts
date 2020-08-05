@@ -255,5 +255,43 @@ export class ToolProvider {
 
     return diff;
   }
+  /**
+   * Image compression
+  **/
+  compressImage(src: string) {
+    return new Promise((res, rej) => {
+      let originalX: number;
+      let originalY: number;
+      let newX : number;
+      let newY: number;
+      const originalImg = new Image();
+      originalImg.onerror = error => rej(error);
+      originalImg.onload = () => {
+        originalX = originalImg.width;
+        originalY = originalImg.height;
+ 
+        if (originalX > 2000 || originalY > 2000) {
+          if (originalX > originalY) {
+            newX = 2000;
+            newY = newX * originalY / originalX;
+          } else {
+            newY = 2000;
+            newX = newY * originalX / originalY;
+          }
+        } else {
+          newX = originalX;
+          newY = originalY;
+        }
+        const elem = document.createElement('canvas');
+        elem.width = newX;
+        elem.height = newY;
+        const ctx = elem.getContext('2d');
+        ctx.drawImage(originalImg, 0, 0, newX, newY);
+        const data = ctx.canvas.toDataURL('image/jpeg',0.85);
+        res(data);
+      };
+      originalImg.src = src;
+    });
+  }
 
 }
