@@ -1,3 +1,3 @@
-# Ionic2-snippets
+# Ionic / Angular snippets
 
-You will find here some Ionic 2 self working components
+You will find here some Ionic / Angular self working components
