@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
+import { environment, SERVER_URL } from './../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,10 +9,15 @@ export class ApiHelperService {
   private _url: string;
 
   constructor(private http: HttpClient) {
-    this._url = 'https://serveur-demo.blabla.fr';
+    this._url = SERVER_URL;
   }
 
-  // Manage HTTP Quesries
+  /**
+   * Manage HTTP queries
+   * @param action : api endpoint action
+   * @param method : http pethod
+   * @param datas : data payload
+   **/
   requestApi({action, method = 'GET', datas = {}}:
   { action: string, method?: string, datas?: any }): Promise<any> {
     const methodWanted = method.toLowerCase();
@@ -19,7 +25,8 @@ export class ApiHelperService {
 
     const httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
       })
     };
 
@@ -40,8 +47,8 @@ export class ApiHelperService {
         break;
     }
 
-    return req // Il renvoie un observable
-            .toPromise(); // Que l'on convertit en promesse
+    return req // Return observable by default
+            .toPromise(); // wich can be converted to promise
   }
 
   get url(): string {
