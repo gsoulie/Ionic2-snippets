@@ -23,10 +23,9 @@ export class ApiHelperService {
     const methodWanted = method.toLowerCase();
     const urlToUse = this.url + action;
 
-    const httpOptions = httpHeader !== {} ? httpHeader: {
+    const httpOptions = httpHeader !== {} ? httpHeader : {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        'Content-Type': 'application/json'
       })
     };
 
