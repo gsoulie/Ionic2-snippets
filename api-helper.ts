@@ -18,12 +18,12 @@ export class ApiHelperService {
    * @param method : http pethod
    * @param datas : data payload
    **/
-  requestApi({action, method = 'GET', datas = {}}:
-  { action: string, method?: string, datas?: any }): Promise<any> {
+  requestApi({action, method = 'GET', datas = {}, httpHeader = {}}:
+  { action: string, method?: string, datas?: any, httpHeader?: any }): Promise<any> {
     const methodWanted = method.toLowerCase();
     const urlToUse = this.url + action;
 
-    const httpOptions = {
+    const httpOptions = httpHeader !== {} ? httpHeader: {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
@@ -33,18 +33,21 @@ export class ApiHelperService {
     let req = null;
 
     switch (methodWanted) {
-      case 'post' :
-        req = this.http.post(urlToUse, datas, httpOptions);
-        break;
-      case 'put' :
-        req = this.http.put(urlToUse, datas, httpOptions);
-        break;
-      case 'delete' :
-        req = this.http.delete(urlToUse, httpOptions);
-        break;
-      default:
-        req = this.http.get(urlToUse, httpOptions);
-        break;
+     case 'post' :
+       req = this.http.post(urlToUse, datas, httpOptions);
+       break;
+     case 'put' :
+       req = this.http.put(urlToUse, datas, httpOptions);
+       break;
+     case 'delete' :
+       req = this.http.delete(urlToUse, httpOptions);
+       break;
+     case 'patch' :
+       req = this.http.patch(urlToUse, datas, httpOptions);
+       break;
+     default:
+       req = this.http.get(urlToUse + '?' + datas, httpOptions);
+       break;
     }
 
     return req // Return observable by default
