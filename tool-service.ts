@@ -20,6 +20,24 @@ export class ToolProvider {
     });
     return guid;
   }
+  
+  /**
+   * Simple alert dialog
+   * @param header 
+   * @param subHeader 
+   * @param message 
+   */
+  async presentAlert(header ='', subHeader = '', message  = ''): Promise<void> {
+    const alert = await this.alertCtrl.create({
+      header: header,
+      subHeader: subHeader,
+      message: message,
+      buttons: ['Ok']
+    });
+    await alert.present();
+    
+    ///// CALL => this.tools.presentAlert('Fetching lists error','Please retry later', JSON.stringify(error.message));
+  }
 
   /**
    * Searching specific member in array
