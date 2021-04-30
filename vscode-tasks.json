@@ -1,0 +1,94 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+        "label": "00_run ng serve open",
+        "type": "shell",
+        "command": "ng",
+        "options": {
+            "cwd": "${workspaceFolder}"
+        },
+        "args": [
+            "serve",
+            "--open"
+        ]
+    },
+    {
+        "label": "01_Build project Sandbox",
+        "type": "shell",
+        "command": "npm",
+        "options": {
+            "cwd": "${workspaceFolder}/Frontends/Workspace"
+        },
+        "args": [
+            "run",
+            "build",
+            // "build-prod",
+            "Sandbox"
+        ]
+    },
+		{
+        "label": "02_Lint workspace",
+        "type": "shell",
+        "command": "npm",
+        "options": {
+            "cwd": "${workspaceFolder}"
+        },
+        "args": [
+            "run",
+            "lint"
+        ]
+    },
+    {
+        "label": "03_Test project Sandbox",
+        "type": "shell",
+        "command": "ng",
+        "options": {
+            "cwd": "${workspaceFolder}/Frontends/Workspace"
+        },
+        "args": [
+            "test",
+            "Sandbox",
+            "--browsers=ChromeDebug", 
+            "--code-coverage",
+            "--watch=true"
+        ]
+    },
+    {
+        "label": "05_Sandbox_Compose init",
+        "detail": "Build api on docker",
+        "command": "sed.bat",
+        "type": "process",
+        "args": [
+            "../Common/Config/docker-compose.env.frontends.yml",
+            "Config/docker-compose.dev.frontends.yml"
+        ],
+        "options": {
+            "cwd": "${workspaceFolder}/Environments/Development"
+        },
+        "problemMatcher": "$msCompile"
+    },
+    {
+        "label": "05_Sandbox_Compose Sandbox",
+        "command": "docker-compose.exe",
+        "type": "process",
+        "args": [
+            "-p", 
+            "Sandbox", 
+            "-f",
+            "Config/docker-compose.dev.local.frontends.yml", 
+            "-f",
+            "Config/docker-compose.dev.local.frontends.build.yml", 
+            "up",
+            "-d", 
+            "--build",                
+            "BacterioV1.dev"
+        ],
+        "options": {
+            "cwd": "${workspaceFolder}/Environments/Development"
+        },
+        "problemMatcher": "$msCompile",
+        "dependsOn": ["05_Sandbox_Compose init"]
+    },
+	]
+}
