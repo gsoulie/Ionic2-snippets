@@ -210,6 +210,21 @@ export class ToolProvider {
     .catch((err) => console.log("error " + JSON.stringify(err)))
   }
   
+  /**
+   * Fill array with X digits fixed values ex : ['00', '01', ... '10'...]
+   * @param maxValue : max value of the result
+   * @param pad : number of digits
+   * @param padSymbol : symbol used to fill the data
+  **/
+  paddingData(maxValue: number, pad: number = 2, padSymbol: string = '0'): string[] {
+    myArray = [];
+    for(let i = 0; i < maxValue; i++) {
+      myArray.push(i.toString().padStart(pad, padSymbol));
+    }
+    
+    return myArray;
+  }
+  
    /** 
    * Get RTC between current date and 01/01/2010 00:00:00
    * The result is returned in hexadecimal (on 4 bytes)
