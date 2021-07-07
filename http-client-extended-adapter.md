@@ -44,18 +44,37 @@ export class HttpClientExtended {
     protected config: ConfigurationProvider,
     protected logger: NGXLogger) { }
 
+  // public mapFromServer<T extends ApiMessage>(c: Constructor<T>) {
+  //   return map((json: T) => { 
+  //     return createApiMessageInstance(c).loadFromJson(json);
+  //   });
+  // }
+  
   public mapFromServer<T extends ApiMessage>(c: Constructor<T>) {
     return map((json: T) => { 
-      return createApiMessageInstance(c).loadFromJson(json);
+      if (json) {
+        return createApiMessageInstance(c).loadFromJson(json);
+      } else {
+        return undefined;
+      }
     });
   }
 
+  // public mapArrayFromServer<T extends ApiMessage>(c: Constructor<T>) {
+  //   return map((jsonList: T[]) => { 
+  //     return jsonList.map(jsonItem => createApiMessageInstance(c).loadFromJson(jsonItem));
+  //   });
+  // }
+  
   public mapArrayFromServer<T extends ApiMessage>(c: Constructor<T>) {
     return map((jsonList: T[]) => { 
-      return jsonList.map(jsonItem => createApiMessageInstance(c).loadFromJson(jsonItem));
+      if (jsonList) {
+        return jsonList.map(jsonItem => createApiMessageInstance(c).loadFromJson(jsonItem));
+      } else {
+        return undefined;
+      }
     });
   }
-  
 
   public get(url: string, options?: any): Observable<object> {
     return this.http.get(url, options);
@@ -67,15 +86,30 @@ export class HttpClientExtended {
       this.mapFromServer(c)
     );
   }
-    
-  public getMultipleData<T extends ApiMessage>(c: Constructor<T>, url: string, options?: any): Observable<T[]> {
+  
+  // public getMultipleData<T extends ApiMessage>(c: Constructor<T>, url: string, options?: any): Observable<T[]> {
+  //   const obsResult$ = this.get(url, options);
+  //   return obsResult$.pipe(
+  //     this.mapArrayFromServer(c)
+  //   );
+  // }
+  
+  public getMultipleData<T extends ApiMessage>(c: Constructor<T>, url: string, withShareReplay: boolean = true, options?: any): Observable<T[]> {
     const obsResult$ = this.get(url, options);
-    return obsResult$.pipe(
+    let returnValue$ =  obsResult$.pipe(
       this.mapArrayFromServer(c)
     );
+    if (withShareReplay) {
+      returnValue$ = returnValue$.pipe(
+        shareReplay({
+          bufferSize: 1,
+          refCount: true
+        })
+      );
+    }
+    return returnValue$;
   }
-
-
+    
   public post(url: string, data?: any): Observable<object> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
@@ -84,15 +118,38 @@ export class HttpClientExtended {
     return this.http.post(url, dataSerialized, {headers: headers});
   }
 
-  public postData<T extends ApiMessage>(c: Constructor<T>, url: string, data?: T): Observable<T> {
-    const obsResult$ = this.post(url, data?.mapForServer());
+  // public postData<T extends ApiMessage>(c: Constructor<T>, url: string, data?: T): Observable<T> {
+  //   const obsResult$ = this.post(url, data?.mapForServer());
+  //   return obsResult$.pipe(
+  //     this.mapFromServer(c)
+  //   );    
+  // }
+  public postData<T extends ApiMessage>(c: Constructor<T>, url: string, data?: T | any): Observable<T> {
+    let param = data;
+    if (param instanceof ApiMessage) {
+      param = param?.mapForServer();
+    }
+    const obsResult$ = this.post(url, param);
     return obsResult$.pipe(
       this.mapFromServer(c)
     );    
   }
 
-  public postMultipleData<T extends ApiMessage>(c: Constructor<T>, url: string, data?: T[]): Observable<T[]> {
-    const obsResult$ = this.post(url, data?.map(d => d.mapForServer()));
+  // public postMultipleData<T extends ApiMessage>(c: Constructor<T>, url: string, data?: T[]): Observable<T[]> {
+  //   const obsResult$ = this.post(url, data?.map(d => d.mapForServer()));
+  //   return obsResult$.pipe(
+  //     this.mapArrayFromServer(c)
+  //   );    
+  // }
+  
+  public postMultipleData<T extends ApiMessage>(c: Constructor<T>, url: string, data?: T[] | any): Observable<T[]> {
+    let param = data;
+    if (param && Array.isArray(param) && param.length > 0) {
+      if (param[0] instanceof ApiMessage) {
+        param = param.map(d => d.mapForServer());
+      }
+    }
+    const obsResult$ = this.post(url, param);
     return obsResult$.pipe(
       this.mapArrayFromServer(c)
     );    
