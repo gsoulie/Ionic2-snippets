@@ -1,3 +1,4 @@
+
 *api-message.model.ts*
 ````typescript
 import { Constructor } from "@angular/material/core/common-behaviors/constructor";
@@ -20,6 +21,26 @@ export abstract class ApiMessage {
 
 export function createApiMessageInstance<T extends ApiMessage>(c: Constructor<T>): T {
   return new c();
+}
+````
+
+### IMPORTANT: les attributs de classes qui extends ApiMessage DOIVENT être optionnels (?:)
+
+ex :
+
+````typescript
+export class ForeignName extends ApiMessage{
+  constructor(
+    public name?: string,
+    public text?: string,) {
+    super();
+  }
+
+  public loadFromJson(json: Object): this {
+    this.name = json['name'];
+    this.text = json['text'];
+    return this;
+  }
 }
 ````
 
