@@ -7,6 +7,32 @@ import { String } from 'typescript-string-operations';
 import { environment } from 'src/environments/environment';
 import { catchError, filter, take, switchMap } from 'rxjs/operators';
 
+/** USAGE
+
+fetchItems(): Observable<Item[]> {
+    const endpoint = '/myendpoint';
+
+    return this.http.get(
+      `${endpoint}`)
+    .pipe(
+      map((jsonArray: Object[]) =>
+        jsonArray.map((jsonItem) =>
+          createApiMessageInstance(Item).loadFromJson(jsonItem)
+        )
+      )
+    );
+  }
+
+  fetchItemDetail(id: number): Observable<Item> {
+    const endpoint = `/myendpoint/${id}`;
+    return this.http.get(endpoint)
+    .pipe(map((jsonItem) => createApiMessageInstance(Item).loadFromJson(jsonItem)));
+  }
+
+
+**/
+
+
 @Injectable({
   providedIn: 'root',
 })
